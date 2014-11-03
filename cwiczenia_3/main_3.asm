@@ -8,19 +8,21 @@
 .CSEG
 
 .ORG 0
+        ; uC start
 	jmp INIT
+
 .ORG 16
+        ; timer0 overflow interrupt
 	jmp ASWOM_TIMER_INTERRUPT
 
 .ORG 32
-
 ASWOM_TIMER_INTERRUPT:
 	CALL UBER_MAKAPAKA_SUM
 	RETI
 
-
 INIT:
 
+        ; store 1 in X word 
 	LDI XL, low(tB)
 	LDI XH, high(tB)
 	LDI ZL, low(LENGTH)
@@ -34,28 +36,28 @@ OKPOK:
 	LDI r16, 1
 	ST X, r16
 
+        ; move to end, init required by word sum later
 	LDI YL, low(tA)
 	LDI YH, high(tA)
 	LDI XL, low(tB)
 	LDI XH, high(tB)
 	LDI ZL, low(LENGTH)
 	LDI ZH, high(LENGTH)
-	
-AFFAFF:
+        
+        ; configure stack pointer
 	LDI r16, low(RAMEND)
 	OUT spl, r16
 	LDI r16, high(RAMEND)
 	OUT sph, r16
 
-PONTYPINY:
+        ; enable timer0 clock source
 	LDI r16, 1<<CS00
 	OUT TCCR0, r16
-	;SBI TCCR0, CS02
+        ; enable timer0 overflow interrupt
 	LDI r16, 1<<TOIE0
 	OUT TIMSK, r16
-	;SBI TIMSK, TOIE0
+        ; enable interrupts
 	SEI
-
 
 HCF:
 	JMP HCF

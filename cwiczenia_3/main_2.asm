@@ -1,13 +1,14 @@
 #include "m32def.inc"
 
 .CSEG
+
 .ORG 0
     jmp INIT_TIMER
+
 .ORG 16
     jmp ASWOM_TIMER_INTERRUPT
 
 .ORG 32
-
 ASWOM_TIMER_INTERRUPT:
     NOP
     RETI

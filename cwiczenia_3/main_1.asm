@@ -5,10 +5,7 @@
 
 .CSEG
 
-
-
-
-STACK_NOT_REALLY_MAKAPAKA_INIT:
+INIT:
     LDI r16, low(RAMEND)
     OUT spl, r16
     LDI r16, high(RAMEND)
@@ -16,18 +13,16 @@ STACK_NOT_REALLY_MAKAPAKA_INIT:
 
 TEST:
     NOP
-    CALL UBER_MAKAPAKA_SUM
+    CALL SUM_INIT
 
     JMP STOP
     
-
-
 STOP:
     JMP STOP
 
 ; set Y and X registers to start of summands
 ; set Z to summands length
-UBER_MAKAPAKA_SUM:
+SUM_INIT:
     PUSH XL
     PUSH XH
     PUSH YH
@@ -45,7 +40,7 @@ UBER_MAKAPAKA_SUM:
     ADC YH, ZH
     CLR R18
 
-UBER_MAKAPAKA_LOOP:
+SUM_LOOP:
     LD R16, -X ; load intermediate operands ...
     LD R17, -Y ; ... and decrement counters
 
@@ -68,15 +63,15 @@ LEAVE_CARRY_0:
     
     ST Y, R17 ; store intermediate result
     SBIW ZL, 1 ; decrement byte counter (word)
-    BRNE UBER_MAKAPAKA_LOOP ; check for completion
+    BRNE SUM_LOOP ; check for completion
 
     ; computiation completed, set carry bit
     CLC
     TST R18
-    BREQ UBER_MAKAPAKA_HALT
+    BREQ SUM_END
     SEC
 
-UBER_MAKAPAKA_HALT:
+SUM_END:
     POP r18
     POP r17
     POP r16
