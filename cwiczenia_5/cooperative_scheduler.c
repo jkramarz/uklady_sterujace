@@ -28,14 +28,17 @@ void schedule(){
 void execute(){
     int i;
     for(;;){
+        cli();
         for(i = 0; i < MAX_NUMBER_OF_TASKS; i++){
             task * current = &tasks[i];
             if(current->ready > 0){
                 current->ready--;
+                sei();
                 current->task(current->params);
                 break;
             }
         }
+        sei();
     }
 }
 

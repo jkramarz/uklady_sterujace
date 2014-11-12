@@ -15,8 +15,8 @@ void init_scheduler(){
 }
 
 void diode(void * params){
-   int offset = (int) params;
-   PORTA ^= _BV(offset);
+    int offset = (int) params;
+    PORTA ^= _BV(offset);
 }
 
 int main(int argc, char * argv[])
@@ -26,14 +26,14 @@ int main(int argc, char * argv[])
 
     DDRA = 0xFF;
     PORTA = 0xFF;
-    addTask(0,-1000,diode,(void *)0);
-    addTask(1,-2000,diode,(void *)1);
-    addTask(2,-3000,diode,(void *)2);
-    addTask(3,-4000,diode,(void *)3);
-    addTask(4,-5000,diode,(void *)4);
-    addTask(5,-6000,diode,(void *)5);
-    addTask(6,-7000,diode,(void *)6);
-    addTask(7,-8000,diode,(void *)7);
+    addTask(0, 100,diode,(void *)0);
+    addTask(1, 200,diode,(void *)1);
+    addTask(2, 300,diode,(void *)2);
+    addTask(3, 400,diode,(void *)3);
+    addTask(4,-500,diode,(void *)4);
+    addTask(5,-600,diode,(void *)5);
+    addTask(6,-700,diode,(void *)6);
+    addTask(7,-800,diode,(void *)7);
     execute();
 
     return 0;
