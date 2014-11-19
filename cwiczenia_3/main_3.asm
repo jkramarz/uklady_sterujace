@@ -13,11 +13,11 @@
 
 .ORG 16
         ; timer0 overflow interrupt
-	jmp ASWOM_TIMER_INTERRUPT
+	jmp TIMER_INTERRUPT
 
 .ORG 32
-ASWOM_TIMER_INTERRUPT:
-	CALL UBER_MAKAPAKA_SUM
+TIMER_INTERRUPT:
+	CALL WORD_SUM
 	RETI
 
 INIT:
@@ -27,10 +27,10 @@ INIT:
 	LDI XH, high(tB)
 	LDI ZL, low(LENGTH)
 	LDI ZH, high(LENGTH)
-OKPOK: 
+PREPARE: 
 	ADIW XL, 1
 	SBIW ZL, 1
-	BRNE OKPOK
+	BRNE PREPARE
 
 	SBIW XL, 1
 	LDI r16, 1
@@ -66,7 +66,7 @@ HCF:
 ; Y += X
 ; set Y and X registers to start of summands
 ; set Z to summands length
-UBER_MAKAPAKA_SUM:
+WORD_SUM:
 	PUSH XL
 	PUSH XH
 	PUSH YH
@@ -84,7 +84,7 @@ UBER_MAKAPAKA_SUM:
 	ADC YH, ZH
 	CLR R18
 
-UBER_MAKAPAKA_LOOP:
+WORD_LOOP:
 	LD R16, -X ; load intermediate operands ...
 	LD R17, -Y ; ... and decrement counters
 
@@ -107,15 +107,15 @@ LEAVE_CARRY_0:
 	
 	ST Y, R17 ; store intermediate result
 	SBIW ZL, 1 ; decrement byte counter (word)
-	BRNE UBER_MAKAPAKA_LOOP ; check for completion
+	BRNE WORD_LOOP ; check for completion
 
 	; computiation completed, set carry bit
 	CLC
 	TST R18
-	BREQ UBER_MAKAPAKA_HALT
+	BREQ WORD_HALT
 	SEC
 
-UBER_MAKAPAKA_HALT:
+WORD_HALT:
 	POP r18
 	POP r17
 	POP r16
